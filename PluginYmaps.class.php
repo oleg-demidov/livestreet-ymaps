@@ -17,12 +17,12 @@ class PluginYmaps extends Plugin
         'template' => array(
             'component.user.info-group' => '_components/user/info-group.tpl', // компонет профиля
             'component.user.search-form' => '_components/user/search-form.users.tpl' , // компонет в поиске
-            'component.field.geo' => '_components/field/field.geo.tpl' , // компонет в поиске
+            'component.field.geo' => '_components/field/field.geo.tpl' , // новый гео компонент
         )
     );
     public function Init()
     {
-    
+       
     }
 
     public function Activate()

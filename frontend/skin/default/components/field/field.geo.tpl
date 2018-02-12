@@ -10,6 +10,7 @@
 
 {extends 'component@field.field'}
 
+
 {block 'field_options' append}
     {component_define_params params=[ 'place', 'classes', 'countries', 'regions', 'cities', 'targetType', 'dafaultValue', 'dafaultText']}
 
@@ -53,22 +54,33 @@
         
     {/if}
     
+    {$chooseName = {lang 'plugin.ymaps.field.defaultText'}}
+    {$default = 1}
+    
+    {if $choosenGeo}
+        {$default = 0}
+        {$chooseName = $choosenGeo->getName()}
+        {$id = $choosenGeo->getId()}
+        {$type = $choosenGeo->getId()}
+    {/if}
+    
+    {if $default}
+        {$classes = "{$classes} default-text"}
+    {/if}
     {$mods = "$mods geo"}
     
-    {$name = "geo[{$choosenGeo->getType()}]"}
     
-   
 {/block}
 
 {block 'field_input'}
-    {**
-     * input text
-     *}
+    
     <div class="{$component}-icon">{component 'icon' icon="map-marker"}</div>
     <div class="input-close-but">X</div>
-    <input type="text" class="{$component}-input {$classes} {$component}-geo js-field-geo" value="{$choosenGeo->getName()}" name="geo_text">
+    <input type="text" class="{$component}-input {$classes} {$component}-geo js-field-geo" value="{$chooseName}" name="geo_text">
     
-    <input type="hidden" class="appended-geo" value="{$choosenGeo->getId()}" name="geo[{$choosenGeo->getType()}]">
+    {if $id}
+        <input type="hidden" class="appended-geo" value="{$id}" name="geo[{$type}]">
+    {/if}
     
     {$aItems = [["text" => {lang 'plugin.ymaps.loading'}, "classes" => 'ls-loading']]} 
     

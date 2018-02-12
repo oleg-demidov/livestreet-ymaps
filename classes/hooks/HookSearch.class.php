@@ -12,6 +12,14 @@ class PluginYmaps_HookSearch extends Hook
         $this->Component_Add('ymaps:search-map');
         $this->Viewer_AssignJs('ymapsOptions', Config::Get('plugin.ymaps.options.search'));
         $this->Viewer_AssignJs('ymapsInit', 0);
+        
+        if(Config::Get('plugin.ymaps.geo.enable')){
+            $this->Lang_AddLangJs([
+                'plugin.ymaps.field.defaultText'
+            ]);
+            $this->Component_Add('ymaps:field');
+            $this->Viewer_AssignJs('country_code', Config::Get('plugin.ymaps.geo.country_code'));
+        }
     }
 
 }

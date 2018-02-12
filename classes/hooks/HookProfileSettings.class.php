@@ -23,12 +23,18 @@ class PluginYmaps_HookProfileSettings extends Hook
         $this->Viewer_Assign('ymapHook', 'settings');
         $this->Component_Add('ymaps:settings-map');
         
-        $this->Component_Add('ymaps:field');
+        if(Config::Get('plugin.ymaps.geo.enable')){
+            $this->Lang_AddLangJs([
+                'plugin.ymaps.field.defaultText'
+            ]);
+            $this->Component_Add('ymaps:field');
+            $this->Viewer_AssignJs('country_code', Config::Get('plugin.ymaps.geo.country_code'));
+        }
         
         $this->Viewer_AssignJs('profile_settings', Config::Get('plugin.ymaps.options.profile_settings'));
         $this->Viewer_AssignJs('ymapData', $aGeoData);
         
-        $this->Viewer_AssignJs('country_code', Config::Get('plugin.ymaps.geo.country_code'));
+        
     }
     
     public function AssignGeo($aParams) {

@@ -1,6 +1,7 @@
 {
+    
     "scripts": {
-        "geo-ajax":"js/field-ajax.geo.js"
+        "geo":"js/field.geo.js"
     },
     "styles":{
         "geo":"css/field.css"

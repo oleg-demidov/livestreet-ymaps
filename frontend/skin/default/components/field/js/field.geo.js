@@ -16,7 +16,7 @@
          * Дефолтные опции
          */
         options: {
-            delayLoad:100,
+            delayLoad:200,
             levelsLoad:[
                 'countries',
                 'regions',
@@ -30,6 +30,7 @@
             },
             // Селекторы
             selectors: {
+                searchAjaxUsers:".js-search-ajax-users",
                 toggle:".js-field-geo",
                 input:".js-field-geo",
                 form:null,
@@ -58,6 +59,7 @@
             this._super();
             
             this.elements.form = $(this.option('selectors.form')+':first');
+            this.elements.searchAjaxUsers = $(this.option('selectors.searchAjaxUsers'));
             
             this.elements.input.keyup(function() {
                 this.delay(this.change.bind(this), this.option('delayLoad') );
@@ -65,8 +67,14 @@
             
             this.elements.clear.on('click', function(event){
                 $(event.currentTarget).css('display', 'none');
-                this.elements.input.val('');
+                if(!this.elements.input.hasClass('default-text')){
+                    this.elements.input.val(ls.lang.get('plugin.ymaps.field.defaultText')).addClass('default-text');
+                }else{
+                    this.elements.input.val('').removeClass('default-text');
+                }                
                 this.clearForm();
+                
+                this.elements.searchAjaxUsers.lsSearchAjax("update");
                 //this.show();
             }.bind(this));
             
@@ -78,6 +86,9 @@
             
         },
         startLoad:function(){
+            if(this.elements.input.hasClass('default-text')){
+                this.elements.input.val('').removeClass('default-text');
+            }
             var menuParent = this.elements.menu.parent();
             
             var countryCode = ls.registry.get('country_code');
@@ -123,15 +134,42 @@
         },
         clickItem:function(event){
             this.hide();
-            var data = $(event.currentTarget).data();
             
-            this.elements.input.val(data.text);         
-            this.elements.clear.css('display', 'block');
+            var data = this.giveData(event.currentTarget);
+            var nameArr = [];
             
             this.clearForm();
-            this.addForm('geo['+data.type+']', data.id);
+            
+            $.each(data, function(key, dataVal){
+                nameArr.push(dataVal.text)
+                this.addForm('geo['+dataVal.type+']', dataVal.id);
+                this.addForm(dataVal.type, dataVal.id, 'js-field-geo-'+dataVal.type);
+            }.bind(this));
+            
+                        
+            this.elements.input.val(nameArr.join(', ')).removeClass('default-text');         
+            this.elements.clear.css('display', 'block');
+            
+            this.elements.searchAjaxUsers.lsSearchAjax("update");
             
             return false;
+        },
+        giveData:function(element){
+            var data = [];
+            var countryExist = false;
+            
+            $(element).find('a').parents('li').each(function(i,el){
+                var dataEl = $(el).data();
+                data.push(dataEl);
+                if(dataEl.type === 'country'){
+                    countryExist = true;
+                }
+            });
+            
+            if(!countryExist){
+                data.push( this.elements.menu.find('li:not(.ls-nav-item--has-children)').data() );
+            }
+            return data;
         },
         change:function(){
             this._load('geo',{query:this.elements.input.val()}, function(response){
@@ -149,9 +187,10 @@
                 call(response);                
             }.bind( this));
         },
-        addForm:function(key, value){
+        addForm:function(key, value, classes){
+            classes = classes || '';
             var input = $(document.createElement('input'));
-            input.attr({name:key, value:value, type:'hidden'}).addClass('appended-geo');
+            input.attr({name:key, value:value, type:'hidden'}).addClass('appended-geo '+classes);
             this.elements.form.append(input);
         },
         removeForm:function(key){
@@ -159,6 +198,9 @@
         },
         clearForm:function(){
             this.elements.form.find('.appended-geo').remove();
+            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.city", null);
+            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.country", null);
+            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.region", null);
         }
         
     });

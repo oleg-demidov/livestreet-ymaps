@@ -13,6 +13,7 @@ return [
     'loading' => 'Загрузка',
     'field' => [
         'region' => 'Вся %%name%%',
-        'country' => 'Вeсь %%name%%'
+        'country' => 'Вeсь %%name%%',
+        'defaultText' => 'Выберете местоположение'
     ]
 ];

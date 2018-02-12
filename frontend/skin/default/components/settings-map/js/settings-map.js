@@ -10,6 +10,7 @@
             selectors:{
                 container:null,
                 selects:"select",
+                input:"input"
             },
             params: {}
         },
@@ -57,6 +58,7 @@
          * Обрабочик изменения селекта Собираем данные и отправляем в поиск обьектов
          */
         change:function(){
+            
             this.hideStaticMap();
             var geos = [];
             this.elements.selects.each(function(i,select){
@@ -65,7 +67,10 @@
                     geos.push( option.text().trim() );
                 }
             });
-            var geos = geos.join(', ');
+            
+            geos.push( this.elements.input.val().trim() );
+            
+            var geos = geos.join(' ');
             this.geocoder(geos,this.showGeocoderOnMap.bind(this));
             
         },

@@ -94,14 +94,18 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
     
     public function getHtmlDropdownMenu($oObjects, $oParent = null, $appendMenu = true) {
         $aReturn = [];
+        
+        $nameParent='';
         if($oParent){
+            $nameParent = $oParent->getName();
             $type = strtolower( Engine::GetEntityName($oParent) );
             $aReturn = [
                 [
                     'text' => $this->Lang_Get('plugin.ymaps.field.'.$type, ['name'=>$oParent->getName()]),
                     'attributes'   => [ 
+                        'data-parent-name' => '',
                         'data-id' => $oParent->getId(),
-                        'data-text' => $oParent->getName(),
+                        'data-text' => $nameParent,
                         'data-type' => strtolower( Engine::GetEntityName($oParent) )
                     ]
                 ],
@@ -113,6 +117,7 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
             $name = $oObject->getRegionName()?"<b>".$oObject->getName()."</b> ".$oObject->getRegionName():"<b>".$oObject->getName()."</b>";
             $appendArr = array(
                 'attributes'   => [ 
+                    'data-parent-name' => $nameParent,
                     'data-id' => $oObject->getId(),
                     'data-text' => $oObject->getName(),
                     'data-type' => strtolower( Engine::GetEntityName($oObject) )

@@ -17,3 +17,12 @@
     cursor: pointer;
     font-weight: bolder;
 }
+.ls-field--geo .default-text{
+    color: #93a1a1;
+}
+.ls-field--geo .ls-field-holder{
+    position: relative;
+}
+div.ls-block.ls-block--users-search{
+    overflow: visible;
+}
