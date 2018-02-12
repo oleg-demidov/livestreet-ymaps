@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "geo-ajax":"js/field-ajax.geo.js"
+    },
+    "styles":{
+        "geo":"css/field.css"
+    }
+}

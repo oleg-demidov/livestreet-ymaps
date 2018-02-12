@@ -1,0 +1,16 @@
+{
+    "name": "modal-map",
+    "version": "1.0.0",
+    "dependencies": {
+        "ymaps:ymaps":"*"
+    },
+    "templates": {
+        
+    },
+    "scripts": {
+        "modal-map":"js/modal-map.js"
+    },
+    "styles": {
+        "modal-map":"css/modal-map.css"
+    }
+}

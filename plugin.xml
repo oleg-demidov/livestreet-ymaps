@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">Ymaps</lang>
+	</name>
+	<author>
+		<lang name="default">Oleg Demidov</lang>
+	</author>
+	<homepage>https://vk.com/u_demidova</homepage>
+	<settings>{admin/plugin/ymaps}</settings>
+	<version>1.0.0</version>
+	<requires>
+		<livestreet>2.0.1</livestreet>
+		<plugins>
+		</plugins>
+	</requires>
+	<description>
+		<lang name="default">Ymaps</lang>
+		<lang name="russian">Ymaps</lang>
+	</description>
+</plugin>

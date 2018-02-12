@@ -1,0 +1,19 @@
+.input-close-but{
+    position: absolute;
+    right: 0;
+    margin: 5px 9px;
+    display: none;
+    cursor: pointer;
+    color: #e95e5e;
+    font-weight: bolder;
+}
+.ls-field--geo .ls-field-input{
+    padding: 0 25px;
+}
+.ls-field--geo .ls-field-icon{
+    position: absolute;
+    left: 0;
+    margin: 4px 6px;
+    cursor: pointer;
+    font-weight: bolder;
+}

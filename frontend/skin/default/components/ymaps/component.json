@@ -1,0 +1,12 @@
+{
+    "name": "ymaps",
+    "version": "1.0.0",
+    "dependencies": {
+    },
+    "scripts": {
+        "ymaps":"https://api-maps.yandex.ru/2.1/?lang=ru_RU",
+        "ymaps_ymaps":"js/ymaps.js"
+    },
+    "styles": {
+    }
+}
