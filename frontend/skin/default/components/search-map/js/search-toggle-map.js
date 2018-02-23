@@ -94,13 +94,14 @@
          */
         showUsersOnMap:function(users){
             var aObjects = $.map(users, function(user, index){
+                var userName = user.user_profile_name?user.user_profile_name:user.user_login;
                 return new ymaps.Placemark(
                     [user.long,user.lat ], 
                     {
-                        clusterCaption: user.user_profile_name,
-                        iconContent: user.user_profile_name,
+                        clusterCaption: userName,
+                        iconContent: userName,
                         iconContentSize: 100,
-                        balloonContent: '<img src="'+user.avatar+'"/><br>' + user.user_profile_name,
+                        balloonContent: '<img src="'+user.avatar+'"/><br>' + userName,
                         
                     },{
                         preset:this.option('point.preset'),

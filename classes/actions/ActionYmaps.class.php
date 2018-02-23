@@ -126,7 +126,7 @@ class PluginYmaps_ActionYmaps extends ActionPlugin
             if(!$oUser){
                 continue;
             }
-            $aUserData = ($oUser)?$oUser->_getData(['id', 'user_profile_name']):[];
+            $aUserData = ($oUser)?$oUser->_getData(['id', 'user_profile_name', 'user_login']):[];
             $aUsers[] = array_merge( $aUserData, $oGeo->_getData(),
                     ['path' => $oUser->getUserWebPath(),'avatar' => $oUser->getProfileAvatarPath()]);
         }
