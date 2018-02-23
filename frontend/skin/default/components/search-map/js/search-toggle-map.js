@@ -82,7 +82,7 @@
          */
         showCountUsers:function(count){
             var layoutResult = this.option('layoutResult');
-            this.elements.elCount.html(layoutResult.replace(/\?/, count ));
+            this.elements.elCount.html(ls.lang.get('plugin.ymaps.search.layoutResult', {count:count}));
         },
         addCountUsers:function(){
             this.elements.elCount = $('<h3 class="h3 js-user-list-search-title" style=""></h3>');

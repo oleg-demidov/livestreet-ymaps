@@ -1,7 +1,7 @@
 <?php
 
 $config['geo'] = [
-    'enable' => true,
+    'enable' => false,
     'country_code' => 'kz',
     'results' => 10
 ];

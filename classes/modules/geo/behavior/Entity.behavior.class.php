@@ -72,12 +72,16 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
          * Значение должно быть полным Сохраняем в БД
          */
         
-        if(!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter(['target_id' => $this->oObject->_getPrimaryKeyValue(),
+        $iTargetId = $this->getPrimaryKeyValueFromEntity($this->oObject);
+        
+        if(!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter(['target_id' => $iTargetId,
                 'target_type' => $this->getParam('target_type') ])){
             $oGeo = Engine::GetEntity('PluginYmaps_Geo_Geo');
-            $oGeo->setTargetId($this->oObject->_getPrimaryKeyValue());
+            $oGeo->setTargetId($iTargetId);
             $oGeo->setTargetType($this->getParam('target_type'));
         }
+        
+        
         $oGeo->_setData($mValue);
             
         
@@ -87,6 +91,14 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
         
         $this->oObject->_setData(array('_ygeo_for_save' => $oGeo));
         return true;
+    }
+    
+    public function getPrimaryKeyValueFromEntity($oEntity) {
+        if($value = $oEntity->_getPrimaryKeyValue()){
+            return $value;
+        }
+        $sKey = $oEntity->_getPrimaryKey();
+        return call_user_func(array($oEntity, 'get'. ucfirst($sKey)));
     }
 
     /**
@@ -117,7 +129,7 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
     {
         return $this->PluginYmaps_Geo_GetGeoByFilter(array_merge([
             'target_type' => $this->getParam('target_type'),
-            'target_id' => $this->oObject->_getPrimaryKeyValue(),
+            'target_id' => $this->getPrimaryKeyValueFromEntity($this->oObject),
             
         ], $aFilter));
     }

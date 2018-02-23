@@ -23,7 +23,7 @@
                 this.element, 
                 {name:'link', selector:".show_map"}, 
                 {tag:"a", class:"show_map", href:"#"},
-                '<i class="fa fa-map-marker  "></i>Отметить на карте');
+                '<i class="fa fa-map-marker  "></i> '+ this.option('i18n.mark_on_map'));
             this.createFormContainer();
             if( (typeof this.option('data') === "object") && (this.option('data') !== null) ){
                 this.addToForm(this.option('data'));
@@ -68,7 +68,9 @@
                 }
             });
             
-            geos.push( this.elements.input.val().trim() );
+            if(this.elements.input.val()){
+                geos.push( this.elements.input.val().trim() );
+            }
             
             var geos = geos.join(' ');
             this.geocoder(geos,this.showGeocoderOnMap.bind(this));

@@ -56,7 +56,7 @@ $config['options'] = [
          * Окружность радиус которой тоже сохраняется
          */
         'circle' => [
-            'show' => false,
+            'show' => true,
             'minRadius' => 500,
             'radius'=>300,
             'properties' => [
@@ -90,7 +90,6 @@ $config['options'] = [
      */
     'search' => [
         'default' => true, // Показывать карту по умолчанию
-        'layoutResult' => 'Найдено пользователей ?',
         'map' => [
             'height' => 500,
             'center' => [37.620070,55.753630],

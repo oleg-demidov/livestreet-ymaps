@@ -14,6 +14,10 @@ return [
     'field' => [
         'region' => 'Вся %%name%%',
         'country' => 'Вeсь %%name%%',
-        'defaultText' => 'Выберете местоположение'
+        'defaultText' => 'Выберете местоположение',
+        'mark_on_map' => 'Отметить на карте'
+    ],
+    'search' => [
+        'layoutResult' => 'Найдено пользователей: %%count%%'
     ]
 ];

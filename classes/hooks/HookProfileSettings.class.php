@@ -22,6 +22,9 @@ class PluginYmaps_HookProfileSettings extends Hook
         
         $this->Viewer_Assign('ymapHook', 'settings');
         $this->Component_Add('ymaps:settings-map');
+        $this->Lang_AddLangJs([
+            'plugin.ymaps.field.mark_on_map'
+        ]);
         
         if(Config::Get('plugin.ymaps.geo.enable')){
             $this->Lang_AddLangJs([
@@ -50,6 +53,7 @@ class PluginYmaps_HookProfileSettings extends Hook
     }
         
     public function SaveGeoUserBefore($aParams) {
+        
         $oUser = $aParams['oUser'];
         $aBehavior = $this->PluginYmaps_Geo_GetBehaviorFor('user');
         
@@ -57,7 +61,7 @@ class PluginYmaps_HookProfileSettings extends Hook
         
         $oUser->_setValidateScenario('none');
         if(!$oUser->_Validate()){
-           // $this->Message_AddError($oUser->_getValidateError());
+            $this->Message_AddError($oUser->_getValidateError());
         }
         $oUser->ymap->CallbackAfterSave();
         
