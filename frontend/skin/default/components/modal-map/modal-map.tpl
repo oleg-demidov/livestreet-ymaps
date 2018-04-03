@@ -1,5 +1,5 @@
 {$component = 'ymaps-modal-map'}
-{component_define_params params=[ 'oGeo', 'url', 'icon', 'text',  'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'oGeo', 'url', 'icon', 'text', 'id', 'mods', 'classes', 'attributes' ]}
 
 {$url = {$url|default:'#'}}
 
@@ -11,7 +11,7 @@
 
 <a  href="{$url}" 
     class="{$component} {cmods name=$component mods=$mods} {$classes} ymaps-modal-toggle" 
-    data-lsmodaltoggle-modal="ymaps_modal" 
+    data-lsmodaltoggle-modal="ymaps_modal{$id}" 
     {cattr list=$attributes}>
         {component 'icon' icon={$icon|default:'map-marker'}} 
         {$text}</a>
@@ -20,5 +20,5 @@
     title='Местоположение'
     showFooter=false
     content='<i class="fa fa-spinner fa-spin fa-fw fa-3x  "></i>'
-    id='ymaps_modal'
+    id="ymaps_modal{$id}"
     classes='js-ymaps-modal'}

@@ -1,0 +1,18 @@
+{
+    "name":"fields",
+    "version":"1.0.0",
+    "dependencies": {
+        "ymaps:ymaps":"*"
+    },
+    "templates":{
+        "ajaxgeo":"field.geo.tpl",
+        "location":"field.location.tpl"
+    },
+    "scripts": {
+        "geo":"js/field.geo.js",
+        "location":"js/field.location.js"
+    },
+    "styles":{
+        "geo":"css/field.css"
+    }
+}

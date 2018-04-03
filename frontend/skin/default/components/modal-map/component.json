@@ -5,12 +5,11 @@
         "ymaps:ymaps":"*"
     },
     "templates": {
-        
+        "modal-map":"modal-map.tpl"
     },
     "scripts": {
         "modal-map":"js/modal-map.js"
     },
     "styles": {
-        "modal-map":"css/modal-map.css"
     }
 }

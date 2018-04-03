@@ -1,9 +1,0 @@
-{
-    
-    "scripts": {
-        "geo":"js/field.geo.js"
-    },
-    "styles":{
-        "geo":"css/field.css"
-    }
-}

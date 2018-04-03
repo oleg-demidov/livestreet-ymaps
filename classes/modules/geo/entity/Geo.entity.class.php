@@ -4,12 +4,12 @@
 class PluginYmaps_ModuleGeo_EntityGeo extends EntityORM
 {
     protected $aValidateRules=array(
-        array('long','number','allowEmpty' => false),
-        array('lat','number','allowEmpty' => false),
-        array('radius','number','allowEmpty' => false),
-        array('target_id','number', 'allowEmpty' => false),
-        array('target_type','string', 'min' => 1, 'allowEmpty' => false),
-        array('zoom','number',  'allowEmpty' => false)
+        array('long','number','allowEmpty' => false, 'on' => array('')),
+        array('lat','number','allowEmpty' => false, 'on' => array('')),
+        array('radius','number','allowEmpty' => false, 'on' => array('')),
+        array('target_id','number', 'allowEmpty' => false, 'on' => ['target_id']),
+        array('target_type','string', 'min' => 1, 'allowEmpty' => false, 'on' => array('')),
+        array('zoom','number',  'allowEmpty' => false, 'on' => array(''))
     );
     
     protected $aRelations = array(

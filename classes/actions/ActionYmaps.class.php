@@ -106,30 +106,11 @@ class PluginYmaps_ActionYmaps extends ActionPlugin
         $bHideMore = $iPage * Config::Get('module.user.per_page') >= $aResult['count'];
         /**
          * Формируем ответ
-         */
-        $aUserIds = [];
-        foreach($aResult['collection'] as $oUser){
-            $aUserIds[] = $oUser->getId();
-        }
-        
-        $aGeo = $this->PluginYmaps_Geo_GetGeoItemsByFilter([
-            '#select' => ['t.lat', 't.long','t.target_id'],
-            '#index-from' => 'target_id',
-            'target_id in' => $aUserIds,
-            'target_type' => 'user'
-        ]);
+         */       
         
        
-        $aUsers = [];
-        foreach($aGeo as $oGeo){
-            $oUser = isset($aResult['collection'][$oGeo->getTargetId()])?$aResult['collection'][$oGeo->getTargetId()]:null;  
-            if(!$oUser){
-                continue;
-            }
-            $aUserData = ($oUser)?$oUser->_getData(['id', 'user_profile_name']):[];
-            $aUsers[] = array_merge( $aUserData, $oGeo->_getData(),
-                    ['path' => $oUser->getUserWebPath(),'avatar' => $oUser->getProfileAvatarPath()]);
-        }
+        $aUsers = $this->PluginYmaps_Geo_GetUsersWithGeo($aResult['collection']);
+        
         /**
          * Для подгрузки
          */

@@ -8,8 +8,7 @@
         "toggle":"toggle.tpl"
     },
     "scripts": {
-        "search-toggle-map":"js/search-toggle-map.js",
-        "init":"js/init.js"
+        "search-toggle-map":"js/search-toggle-map.js"
     },
     "styles": {
     }

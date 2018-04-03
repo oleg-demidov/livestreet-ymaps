@@ -22,6 +22,7 @@
         },
         map:null,
         clusterer:null,
+        container:null,
         
         _create: function () {
             this._super();
@@ -36,17 +37,23 @@
                        
                
         },
-        createJsMap:function(container, options){
+        createJsMap:function(container, state, options){
+            this.container = container;
+            state = state || {};
             options = options || {};
             if(this.option('map') === null){
                 console.log('Настройки карты не переданы');
                 return;
             }
-            options = Object.assign(options, this.option('map'));
+            state = Object.assign(this.option('map.state'), state );
+            options = Object.assign(options, this.option('map.options'));
             
-            this.addElement(container, {name:'map', selector:"#map"}, {tag:"div", id:"map"});
-
-            this.map = new ymaps.Map('map', options); 
+            //container.attr('id', 'map');
+            this.addElement(container, {name:'map', selector:"#map"}, {tag:"div", id:"map", class:"js-ymap"});
+            
+            container.css({width:state.width,height:state.height});
+            //console.log( state, options)
+            this.map = new ymaps.Map('map', state, options); 
             
             this.map.events.add('boundschange', this.controlBounds.bind(this));
             
@@ -71,13 +78,28 @@
          * Показывает статичную карту
          */
         showStaticMap:function(container, options){
+            var src;
+            
+            if(!(src = this.getStaticMapUrl(options))){
+                return false;
+            }
+            
+            this.addElement(container, {name:'staticMap', selector:".static-map"}, {tag:"img", src:src, class:"static-map"});
+            
+            this._trigger( 'afterShowStatMap', null, this );
+        },
+        
+        getStaticMapUrl:function(options){
             options = options || {};
             
             if(this.option('staticMap') === null){
                 console.log('Настройки static карты не переданы');
-                return;
+                return false;
             }
-            var resOptions = Object.assign(this.option('staticMap'), options );
+            var statOpt =  JSON.stringify(this.options.staticMap);
+            statOpt =  JSON.parse(statOpt);
+            
+            var resOptions = Object.assign(statOpt, options ); 
             var pt = $.map(resOptions.pt, function(value, index) {
                 return [value];
             });
@@ -87,17 +109,15 @@
                 size:size.join(','),
                 z:Math.abs(resOptions.zoom),
                 ll:resOptions.ll
-            };    
+            };   
             if(resOptions.lat !== undefined){
                 queryData.pt = [Math.abs(resOptions.lat), Math.abs(resOptions.long), pt.join('')].join(',');
                 delete queryData.ll;
             }
             
-            var src = "https://static-maps.yandex.ru/1.x/?"+$.param(queryData);
+            var src = "https://static-maps.yandex.ru/1.x/?"+$.param(queryData);  
             
-            this.addElement(container, {name:'staticMap', selector:".static-map"}, {tag:"img", src:src, class:"static-map"});
-            
-            this._trigger( 'afterShowStatMap', null, this );
+            return src;
         },
         
         hideStaticMap:function(){
@@ -112,12 +132,12 @@
             this.map.geoObjects.removeAll();
         },
         hideJsMap:function(){
-            $(this.option('selectors.map')).css('display', 'none');
+            this.container.css('display', 'none');
             this._trigger( 'afterHideJsMap', null, this );
         },
         showJsMap:function(){
-            $(this.option('selectors.map')).css('display', 'block')
-                    .css('height', this.option('map.height'));
+            this.container.css('display', 'block')
+                    .css({height: this.option('map.state.height'), width:this.option('map.state.width')});
             this.map.container.fitToViewport();
             this._trigger( 'afterShowJsMap', null, this );
         },
@@ -132,6 +152,10 @@
             }
             return radius;
         },
+        getCenterAndZoom:function(Bounds){ 
+            var state = this.option('map.state');
+            return ymaps.util.bounds.getCenterAndZoom(Bounds,[state.width, state.height]);
+        },
         /*
          * Получить набор обьектов по запросу
          */
@@ -140,10 +164,10 @@
                 console.log('Настройки geocoder или filter не переданы');
                 return;
             }
-            console.log('geocoder '+mQuery)
-            var options = this.option('geocoder');
             
-            var myGeocoder = ymaps.geocode(mQuery, this.option('geocoder'));
+            var options = this.option('geocoder');
+            //console.log('geocoder ',mQuery,options)
+            var myGeocoder = ymaps.geocode(mQuery, options);
             myGeocoder.then(
                 function (res) {
                     if(!this.option('filter.enable')){
@@ -154,7 +178,8 @@
                     call(geoObjects);
                 }.bind(this),
                 function (err) {
-                    console.log('Ошибка поиска гео обьекта');
+                    console.log('Ошибка поиска гео обьекта',err);
+                    call();
                 }
             );
         },
@@ -162,6 +187,7 @@
          * Фильтр обьектов по запросу
          */
         filterRes:function(res){
+            
             var newGeoObjects = new ymaps.GeoObjectCollection({}, {});
 
             res.geoObjects.each(function(oGeo){
@@ -208,7 +234,7 @@
         /*
          * Добавляет кнопку Ок на карту
          */
-        _addButton:function(){
+        _addButton:function(call){
             var _this = this;
             var layout = ymaps.templateLayoutFactory.createClass(
                     '<button type="button" id="butOk" value="" class="ls-button ls-button--primary map-ok ">{{ data.content }}</button>',
@@ -217,6 +243,7 @@
                         layout.superclass.build.call(this);
                         $('#butOk').on('click', function(){
                             _this.buttonHandler();
+                            call();
                         })
                     }
                 }
@@ -232,8 +259,11 @@
                 }
             });
             
+            
+            
             this.map.controls.add(button, {float: 'right'});
         },
+        buttonHandler:function(){},
         /*
          * Вспомогательный метод для добавления элемента в this.elements
          */

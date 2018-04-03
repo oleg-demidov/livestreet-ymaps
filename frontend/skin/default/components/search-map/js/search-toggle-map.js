@@ -7,9 +7,10 @@
          */
         options: {
             selectors:{
-                resultList:".js-search-ajax-users",
+                resultList:".js-search-ajax-masters",
                 showList:".js-show-list",
-                showMap:".js-show-map"
+                showMap:".js-show-map",
+                mapContainer:".fl-map-container"
             },
             params: {}
         },        
@@ -20,14 +21,14 @@
             $(this.option('selectors.map')).remove();
             
         },
+        tmpAfterupdate:null,
         /*
          * После подгрузки ymaps вставляем элементы, включаем карту, устанавливаем обработчики на кнопки
          */
         initYmaps:function(){
             var listEl = $(this.option('selectors.resultList'));
             
-            this.elements.mapContainer = $(this.option('selectors.resultList')).parent();
-            
+           
             this.createJsMap(this.elements.mapContainer);
             
             this.elements.showMap.on('click', this.showYMap.bind(this));
@@ -35,47 +36,63 @@
             
             this.hideJsMap();
             
-            this.addCountUsers();
+            //this.addCountUsers();
             
             if(this.option('default')){
                 this.showYMap();
-            }            
+            }       
         },
         /*
          * Пернеключаем на карту
          */
         showYMap:function(){
-            this.showJsMap();
             this.elements.showMap.prop('disabled', true);
             this.elements.showList.prop('disabled', false);
-            var el = $(this.option('selectors.resultList'));
-            el.hide();
-            el.lsSearchAjax("setParam",'bMap',1);
-            el.lsSearchAjax("option",'urls.search',aRouter.ymaps + 'ajax-serach-users/');
-            el.lsSearchAjax("option",'afterupdate', function ( event, data ) {
+            
+            this.elements.resultList.hide();
+            this.showJsMap();
+            
+            this.element.flSearchAjax("setParam",'bMap',1);
+            
+            this.tmpAfterupdate = this.element.flSearchAjax("option", "afterupdate");
+            this.element.flSearchAjax("option",'afterupdate', function ( event, data ) {
+                //console.log(data.response);
                 this.clearMap();
-                this.showCountUsers(data.response.users.length);
                 if(data.response.users.length){
                     this.showUsersOnMap(data.response.users);
                 }
             }.bind(this));
-            el.lsSearchAjax("update");
+            
+            this.element.flSearchAjax("update");
+           /* var el = $(this.option('selectors.resultList'));
+            el.hide();
+            
+            el.lsSearchAjax("option",'urls.search',aRouter.ymaps + 'ajax-serach-users/');
+            
+            el.lsSearchAjax("update");*/
         },
         /*
          * Переключаем на список
          */
         showList:function(){
             this.hideJsMap();
+            this.elements.resultList.show();
+            
             this.elements.showMap.prop('disabled', false);
             this.elements.showList.prop('disabled', true);
-            var el = $(this.option('selectors.resultList'));
+            
+            this.element.flSearchAjax("setParam",'bMap',undefined);
+            
+            this.element.flSearchAjax("option",'afterupdate',this.tmpAfterupdate);
+            this.element.flSearchAjax("update");
+            /*var el = $(this.option('selectors.resultList'));
             el.show();
             el.lsSearchAjax("setParam",'bMap',0);
             el.lsSearchAjax("option",'urls.search',aRouter.people + 'ajax-search/');
             el.lsSearchAjax("option",'afterupdate', function ( event, data ) {
                 data.context.getElement( 'more' ).lsMore( 'option', 'params.next_page', 2 );
             });
-            el.lsSearchAjax("update");
+            el.lsSearchAjax("update");*/
         },
         /*
          * Индикатор количества пользователей
@@ -87,7 +104,7 @@
         addCountUsers:function(){
             this.elements.elCount = $('<h3 class="h3 js-user-list-search-title" style=""></h3>');
             this.elements.elCount.css({ position:'absolute', zIndex:'100'})
-            this.elements.map.prepend(this.elements.elCount);
+            //this.elements.map.prepend(this.elements.elCount);
         },
         /*
          * Принимаем массив пользователей и вставляем на карту
@@ -97,10 +114,11 @@
                 return new ymaps.Placemark(
                     [user.long,user.lat ], 
                     {
-                        clusterCaption: user.user_profile_name,
-                        iconContent: user.user_profile_name,
+                        clusterCaption: user.user_profile_name || user.user_login,
+                        iconContent: user.user_profile_name || user.user_login,
                         iconContentSize: 100,
-                        balloonContent: '<img src="'+user.avatar+'"/><br>' + user.user_profile_name,
+                        balloonContent: '<a href="'+user.path+'"><img src="'+user.avatar+'"/></a><br>' + 
+                                '<a href="'+user.path+'">'+(user.user_profile_name || user.user_login)+'</a>',
                         
                     },{
                         preset:this.option('point.preset'),

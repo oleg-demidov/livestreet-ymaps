@@ -101,7 +101,7 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
             $type = strtolower( Engine::GetEntityName($oParent) );
             $aReturn = [
                 [
-                    'text' => $this->Lang_Get('plugin.ymaps.field.'.$type, ['name'=>$oParent->getName()]),
+                    'text' => "<b>".$this->Lang_Get('plugin.ymaps.field.'.$type, ['name'=>$oParent->getName()])."</b> ",
                     'attributes'   => [ 
                         'data-parent-name' => '',
                         'data-id' => $oParent->getId(),
@@ -114,7 +114,7 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
         }
         
         foreach ($oObjects as $oObject) {
-            $name = $oObject->getRegionName()?"<b>".$oObject->getName()."</b> ".$oObject->getRegionName():"<b>".$oObject->getName()."</b>";
+            $name = $oObject->getRegionName()?"<b>".$oObject->getName()."</b> ".$oObject->getRegionName():$oObject->getName();
             $appendArr = array(
                 'attributes'   => [ 
                     'data-parent-name' => $nameParent,

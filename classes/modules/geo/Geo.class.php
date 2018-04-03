@@ -17,7 +17,7 @@ class PluginYmaps_ModuleGeo extends ModuleORM{
         return array(
             'class'=>'PluginYmaps_ModuleGeo_BehaviorEntity',
             'target_type'=>$sTargetType,
-            'field_name' =>Config::Get('plugin.ymaps.options.field_name')
+            'form_field' =>Config::Get('plugin.ymaps.location.field_name')
         );
     }
     
@@ -99,6 +99,34 @@ class PluginYmaps_ModuleGeo extends ModuleORM{
                 $oEntity->_setData(array('_ymaps' => array()));
             }
         }
+    }
+    
+    public function GetUsersWithGeo($aUsersCollection) {
+        $aUserIds = [];
+        foreach($aUsersCollection as $oUser){
+            $aUserIds[] = $oUser->getId();
+        }
+        
+        $aGeo = $this->PluginYmaps_Geo_GetGeoItemsByFilter([
+            '#select' => ['t.lat', 't.long','t.target_id'],
+            '#index-from' => 'target_id',
+            'target_id in' => $aUserIds,
+            'target_type' => 'user'
+        ]);
+        
+       
+        $aUsers = [];
+        foreach($aGeo as $oGeo){
+            $oUser = isset($aUsersCollection[$oGeo->getTargetId()])?$aUsersCollection[$oGeo->getTargetId()]:null;  
+            if(!$oUser){
+                continue;
+            }
+            $aUserData = ($oUser)?$oUser->_getData(['id', 'user_profile_name', 'user_login']):[];
+            $aUsers[] = array_merge( $aUserData, $oGeo->_getData(),
+                    ['path' => $oUser->getUserWebPath(),'avatar' => $oUser->getProfileAvatarPath()]);
+        }
+        
+        return $aUsers;
     }
     
 }

@@ -19,7 +19,7 @@
             this._super();   
             $(this.option('selectors.modal')).lsModal();
             this.element.lsModalToggle();
-            this.elements.modal = $(this.option('selectors.modal')).lsModal();
+            this.elements.modal = $('#'+this.element.data('lsmodaltoggleModal')).lsModal();
            
         },
         /*
