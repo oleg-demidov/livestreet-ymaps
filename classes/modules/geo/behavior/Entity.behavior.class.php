@@ -71,7 +71,7 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
          * Значение должно быть полным Сохраняем в БД
          */
         
-        if(ModuleRbac::ROLE_CODE_GUEST == $this->oObject->_getPrimaryKeyValue() or (!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter([
+        /*if(ModuleRbac::ROLE_CODE_GUEST == $this->oObject->_getPrimaryKeyValue() or (!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter([
                 'target_id' => $this->oObject->_getPrimaryKeyValue(),
                 'target_type' => $this->getParam('target_type') ]))){
             $oGeo = Engine::GetEntity('PluginYmaps_Geo_Geo');
@@ -86,7 +86,7 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
             
         if(!$oGeo->_Validate()){
             return $this->Lang_Get('plugin.ymaps.notices.validate_require').'. '.$oGeo->_getValidateError();
-        }      
+        }    */  
         
         $this->oObject->_setData(array('_location_for_save' => $oGeo));
         return true;
