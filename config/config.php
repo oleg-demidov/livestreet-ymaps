@@ -3,7 +3,7 @@
 Config::Set('router.page.ymaps', 'PluginYmaps_ActionYmaps');
 
 
-
+$config['field_name'] = 'location';
 
 
 $config['options'] = [

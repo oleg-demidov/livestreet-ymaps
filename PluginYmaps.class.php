@@ -21,7 +21,7 @@ class PluginYmaps extends Plugin
         )
     );
     
-    public function __construct($param) {
+    public function __construct() {
         if(Config::Get('plugin.ymaps.geo.enable')){
             $this->aInherits['template']['component.field.geo'] = '_components/fields/field.geo.tpl';// новый гео компонент
         }
