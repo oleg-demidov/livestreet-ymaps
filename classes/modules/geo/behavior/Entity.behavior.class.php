@@ -71,6 +71,8 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
          * Значение должно быть полным Сохраняем в БД
          */
         
+        $oGeo = Engine::GetEntity('PluginYmaps_Geo_Geo', $mValue);
+        
         /*if(ModuleRbac::ROLE_CODE_GUEST == $this->oObject->_getPrimaryKeyValue() or (!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter([
                 'target_id' => $this->oObject->_getPrimaryKeyValue(),
                 'target_type' => $this->getParam('target_type') ]))){
