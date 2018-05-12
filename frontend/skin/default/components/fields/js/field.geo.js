@@ -30,11 +30,13 @@
             },
             // Селекторы
             selectors: {
-                searchAjaxUsers:".js-search-ajax-users",
                 toggle:".js-field-geo",
                 input:".js-field-geo",
                 form:null,
-                clear:".input-close-but"
+                clear:".input-close-but",
+                country:".js-field-geo-country",
+                region:".js-field-geo-region",
+                city:".js-field-geo-city",
             },
             params: {},
             i18n: {
@@ -60,7 +62,6 @@
             this._super();
             
             this.elements.form = $(this.option('selectors.form')+':first');
-            this.elements.searchAjaxUsers = $(this.option('selectors.searchAjaxUsers'));
             
             this.elements.input.keyup(function() {
                 this.delay(this.change.bind(this), this.option('delayLoad') );
@@ -74,10 +75,9 @@
                 $(event.currentTarget).css('display', 'none');
                 this.elements.input.val('');
                 this.elements.input.attr('title', '');
-                this.clearForm();
+                this.clearFields();
                 
                 this._trigger( 'afterchange', null, { context: this } );
-                //this.elements.searchAjaxUsers.lsSearchAjax("update");
                 //this.show();
             }.bind(this));
             
@@ -139,21 +139,19 @@
             var data = this.giveData(event.currentTarget);
             var nameArr = [];
             
-            this.clearForm();
             
-            $.each(data, function(key, dataVal){
-                nameArr.push(dataVal.text)
-                this.addForm('geo['+dataVal.type+']', dataVal.id);
-                this.addForm(dataVal.type, dataVal.id, 'js-field-geo-'+dataVal.type);
+            $.each(data, function(key, dataVal){ 
+                this.elements[dataVal.type].val(dataVal.id).change();
+                nameArr.push(dataVal.text);
+                
             }.bind(this));
-            
+            this.elements.country.keyup();
                         
             this.elements.input.val(nameArr.join(', ')).removeClass('default-text');      
             this.elements.input.attr('title', nameArr.join(', '));
             this.elements.clear.css('display', 'block');
             
             this._trigger( 'afterchange', null, { context: this } );
-            //this.elements.searchAjaxUsers.lsSearchAjax("update");
             
             return false;
         },
@@ -198,23 +196,10 @@
                 call(response);                
             }.bind( this), {showProgress:false});
         },
-        addForm:function(key, value, classes){
-            classes = classes || '';
-            var input = $(document.createElement('input'));
-            input.attr({name:key, value:value, type:'hidden'}).addClass('appended-geo '+classes);
-            this.elements.form.append(input);
-        },
-        removeForm:function(key){
-            this.elements.form.find('input[name='+key+']').remove();
-        },
-        clearForm:function(){
-            this.elements.form.find('.appended-geo').remove();
-            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.city", null);
-            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.country", null);
-            this.elements.searchAjaxUsers.lsSearchAjax("option", "params.region", null);
-            
-            this._trigger( 'afterclear', null, { context: this } );
+        clearFields:function(){
+            this.elements.country.val('');
+            this.elements.region.val('');
+            this.elements.city.val('').keyup();
         }
-        
     });
 })(jQuery);

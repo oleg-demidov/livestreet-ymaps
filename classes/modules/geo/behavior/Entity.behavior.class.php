@@ -73,11 +73,11 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
         
         $oGeo = Engine::GetEntity('PluginYmaps_Geo_Geo', $mValue);
         
-        /*if(ModuleRbac::ROLE_CODE_GUEST == $this->oObject->_getPrimaryKeyValue() or (!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter([
-                'target_id' => $this->oObject->_getPrimaryKeyValue(),
+        if(ModuleRbac::ROLE_CODE_GUEST == $this->getPrimaryKeyValue() or (!$oGeo = $this->PluginYmaps_Geo_GetGeoByFilter([
+                'target_id' => $this->getPrimaryKeyValue(),
                 'target_type' => $this->getParam('target_type') ]))){
             $oGeo = Engine::GetEntity('PluginYmaps_Geo_Geo');
-            $oGeo->setTargetId($this->oObject->_getPrimaryKeyValue());
+            $oGeo->setTargetId($this->getPrimaryKeyValue());
             $oGeo->setTargetType($this->getParam('target_type'));
         }
         $oGeo->_setData($mValue);
@@ -88,7 +88,7 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
             
         if(!$oGeo->_Validate()){
             return $this->Lang_Get('plugin.ymaps.notices.validate_require').'. '.$oGeo->_getValidateError();
-        }    */  
+        }     
         
         $this->oObject->_setData(array('_location_for_save' => $oGeo));
         return true;
@@ -102,9 +102,19 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
     {
         if(!$oGeo = $this->oObject->_getDataOne('_location_for_save')){
             return false;
-        }        
-        $oGeo->setTargetId($this->oObject->_getPrimaryKeyValue());
+        }
+//        $oGeo->setTargetId($this->getPrimaryKeyValue());
         $oGeo->Save();
+    }
+    
+    public function getPrimaryKeyValue() {
+        if($value = $this->oObject->_getPrimaryKeyValue()){
+            return $value;
+        }
+        if($value = $this->oObject->getId()){
+            return $value;
+        }
+        return null;
     }
 
     /**

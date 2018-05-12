@@ -16,9 +16,9 @@ class PluginYmaps_HookProfileSettings extends Hook
         
     public function SaveGeoUserBefore($aParams) {
         $oUser = $aParams['oUser'];
-        /*$aBehavior = $this->PluginYmaps_Geo_GetBehaviorFor('user');
+        $aBehavior = $this->PluginYmaps_Geo_GetBehaviorFor('user');
         $aBehavior['validate_enable'] = true;
-        $oUser->AttachBehavior('ymap', $aBehavior);*/
+        $oUser->AttachBehavior('ymaps', $aBehavior);
         
         $oUser->ymaps->setParam('validate_enable', true);
         $oUser->ymaps->setParam('validate_from_request', true);

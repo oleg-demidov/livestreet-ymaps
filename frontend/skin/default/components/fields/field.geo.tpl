@@ -57,6 +57,11 @@
         {/foreach}        
     {/if}
     
+    {if $place }
+        {$idCountry = $place->getCountryId()}
+        {$idRegion = $place->getRegionId()}
+        {$idCity = $place->getCityId()}
+    {/if}
     
     {$mods = "$mods geo"}
     
@@ -74,10 +79,16 @@
            placeholder="{lang 'plugin.ymaps.field.defaultText'}"
            value="{$sInputVal}" data-show-dropdown="{$showDropdown}" autocomplete="off" >
     
-    {if $choosenGeo}
+    {*if $choosenGeo}
         <input type="hidden" class="appended-geo" value="{$choosenGeo->getId()}" name="{$name|default:'geo'}[{$choosenGeo->getType()}]">
         <input type="hidden" class="appended-geo" value="{$choosenGeo->getId()}" name="{$choosenGeo->getType()}">
-    {/if}
+    {/if*}
+    
+    
+    <input type="hidden" class="js-field-geo-country" value="{$idCountry}" name="{$name|default:'geo'}[country]">
+    <input type="hidden" class="js-field-geo-region" value="{$idRegion}" name="{$name|default:'geo'}[region]">
+    <input type="hidden" class="js-field-geo-city" value="{$idCity}" name="{$name|default:'geo'}[city]"> 
+    
     
     {$aItems = [["text" => {lang 'plugin.ymaps.loading'}, "classes" => 'ls-loading']]} 
     
