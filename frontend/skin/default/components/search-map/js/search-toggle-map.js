@@ -7,7 +7,6 @@
          */
         options: {
             selectors:{
-                resultList:".js-search-ajax-masters",
                 showList:".js-show-list",
                 showMap:".js-show-map",
                 mapContainer:".fl-map-container"
@@ -15,7 +14,7 @@
             params: {}
         },        
         usersCollection:null,
-        _create: function () {
+        _create: function () { 
             this._super();
             
             $(this.option('selectors.map')).remove();
@@ -26,7 +25,6 @@
          * После подгрузки ymaps вставляем элементы, включаем карту, устанавливаем обработчики на кнопки
          */
         initYmaps:function(){
-            var listEl = $(this.option('selectors.resultList'));
             
            
             this.createJsMap(this.elements.mapContainer);

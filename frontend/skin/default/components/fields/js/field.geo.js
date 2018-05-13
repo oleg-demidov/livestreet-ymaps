@@ -32,7 +32,6 @@
             selectors: {
                 toggle:".js-field-geo",
                 input:".js-field-geo",
-                form:null,
                 clear:".input-close-but",
                 country:".js-field-geo-country",
                 region:".js-field-geo-region",
@@ -59,9 +58,7 @@
          * @private
          */
         _create: function () {
-            this._super();
-            
-            this.elements.form = $(this.option('selectors.form')+':first');
+            this._super();            
             
             this.elements.input.keyup(function() {
                 this.delay(this.change.bind(this), this.option('delayLoad') );
@@ -141,7 +138,7 @@
             
             
             $.each(data, function(key, dataVal){ 
-                this.elements[dataVal.type].val(dataVal.id).change();
+                this.elements[dataVal.type].val(dataVal.id);
                 nameArr.push(dataVal.text);
                 
             }.bind(this));

@@ -33,6 +33,7 @@ $config['search'] = [ // настройки карты в поиске
     
 ];
 
-
+$config['search']['actions']['people'] = $config['search']['actions']['masters'];
+    
 
 return $config;

@@ -9,7 +9,8 @@ $config['geo'] = [
 $config['load_geo_actions'] = [
     'settings',
     'masters',
-    'fauth'
+    'fauth',
+    'people'
 ];
 
 return $config;
