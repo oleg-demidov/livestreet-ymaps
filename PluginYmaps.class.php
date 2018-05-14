@@ -16,7 +16,7 @@ class PluginYmaps extends Plugin
     protected $aInherits = array(
         'template' => array(
             'component.user.info-group' => '_components/user/info-group.tpl', // компонет профиля
-            'component.user.search-form' => '_components/user/search-form.users.tpl' , // компонет в поиске
+//            'component.user.search-form' => '_components/user/search-form.users.tpl' , // компонет в поиске
             'component.field.geo' => '_components/fields/field.geo.replace.tpl' ,
         )
     );

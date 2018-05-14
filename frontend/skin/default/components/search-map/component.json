@@ -4,11 +4,8 @@
     "dependencies": {
         "ymaps:ymaps":"*"
     },
-    "templates": {
-        "toggle":"toggle.tpl"
-    },
     "scripts": {
-        "search-toggle-map":"js/search-toggle-map.js"
+        "search-map":"js/search-map.js"
     },
     "styles": {
     }

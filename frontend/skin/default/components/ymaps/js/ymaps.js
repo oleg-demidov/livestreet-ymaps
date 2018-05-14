@@ -23,12 +23,16 @@
         map:null,
         clusterer:null,
         container:null,
+        ymaps:null,
         
         _create: function () {
             this._super();
-            if(ymaps !== undefined){
-                ymaps.ready(this.initYmaps.bind(this));
+            
+            if(this.option('ymaps') !== null){
+                this.ymaps = this.option('ymaps');
+                this.ymaps.ready(this.initYmaps.bind(this));
             }
+            
         },
         /*
          * Вызывается после подгрузки всех обьектов ymaps
@@ -53,7 +57,7 @@
             
             container.css({width:state.width,height:state.height});
             //console.log( state, options)
-            this.map = new ymaps.Map('map', state, options); 
+            this.map = new this.ymaps.Map('map', state, options); 
             
             this.map.events.add('boundschange', this.controlBounds.bind(this));
             
@@ -145,7 +149,7 @@
          * Получить радиус для окружности чтобы она входила в область bounds
          */
         getRadiusByBounds:function(aBounds){
-            var dist = ymaps.coordSystem.geo.getDistance(aBounds[0],aBounds[1]);
+            var dist = this.ymaps.coordSystem.geo.getDistance(aBounds[0],aBounds[1]);
             var radius = Math.ceil(dist/4);
             if(this.option('ymapsOptions.circle.minRadius') > radius){
                 radius = this.option('ymapsOptions.circle.minRadius');
@@ -154,7 +158,7 @@
         },
         getCenterAndZoom:function(Bounds){ 
             var state = this.option('map.state');
-            return ymaps.util.bounds.getCenterAndZoom(Bounds,[state.width, state.height]);
+            return this.ymaps.util.bounds.getCenterAndZoom(Bounds,[state.width, state.height]);
         },
         /*
          * Получить набор обьектов по запросу
@@ -167,7 +171,7 @@
             
             var options = this.option('geocoder');
             //console.log('geocoder ',mQuery,options)
-            var myGeocoder = ymaps.geocode(mQuery, options);
+            var myGeocoder = this.ymaps.geocode(mQuery, options);
             myGeocoder.then(
                 function (res) {
                     if(!this.option('filter.enable')){
@@ -188,7 +192,7 @@
          */
         filterRes:function(res){
             
-            var newGeoObjects = new ymaps.GeoObjectCollection({}, {});
+            var newGeoObjects = new this.ymaps.GeoObjectCollection({}, {});
 
             res.geoObjects.each(function(oGeo){
                 if(newGeoObjects.getLength() >= this.option('filter.results')){
@@ -211,7 +215,7 @@
             if(this.clusterer !== null){
                 this.clusterer.removeAll();
             }else{
-                this.clusterer = new ymaps.Clusterer(this.option('cluster'));
+                this.clusterer = new this.ymaps.Clusterer(this.option('cluster'));
             }
             this.clusterer.add(aObjects);
             this.map.geoObjects.add(this.clusterer);
@@ -220,7 +224,7 @@
          * Получить регионы и их геометрию
          */
         regionsLoad:function(sCode, call){
-            ymaps.regions.load(sCode, {
+            this.ymaps.regions.load(sCode, {
                 lang: 'ru',
                 quality: 1
             }).then(function (result) {
@@ -236,7 +240,7 @@
          */
         _addButton:function(call){
             var _this = this;
-            var layout = ymaps.templateLayoutFactory.createClass(
+            var layout = this.ymaps.templateLayoutFactory.createClass(
                     '<button type="button" id="butOk" value="" class="ls-button ls-button--primary map-ok ">{{ data.content }}</button>',
                 {
                     build:function(){
@@ -249,7 +253,7 @@
                 }
             );
             
-            var button = new ymaps.control.Button({
+            var button = new this.ymaps.control.Button({
                 data:{
                     content:'Ок',
                     float:"right"
