@@ -6,14 +6,14 @@
          * Дефолтные опции
          */
         options: {
-            afterShowStatMap:null,
-            afterShowJsMap:null,
-            afterHideJsMap:null,
-            afterInitJsMap:null,
-            map:null,
-            staticMap:null,
+            aftershowstatmap:null,
+            aftershowjsmap:null,
+            afterhidejsmap:null,
+            afterinitjsmap:null,
+            ymap:null,
             geocoder:null,
             filter:null,
+            createAfterInit:true,
             values:{},
             selectors:{
                 container:".container-ymap"
@@ -24,7 +24,7 @@
         clusterer:null,
         container:null,
         ymapsReady:false,
-        mapReady:false,
+        jsMapReady:false,
         
         _create: function () {
             this._super();
@@ -34,20 +34,20 @@
             }
             
         },
-        ymapsOnReady:function(){
-            this.ymapsReady = true;
-            this.initYmaps(this);
-            this._trigger( 'initYmaps', null, this );
-        },
         /*
          * Вызывается после подгрузки всех обьектов ymaps
          */
-        initYmaps:function(data){
+        ymapsOnReady:function(){
+            this._trigger( 'afterinitymaps', null, this );
+            this.ymapsReady = true;
             
-               
+            if(this.option('createAfterInit')){
+                this.createJsMap(this.element);       
+            }
         },
+        
         isMapReady:function(){
-            return this.mapReady;
+            return this.jsMapReady;
         },
         createJsMap:function(container, state, options){
             this.container = container;
@@ -63,17 +63,16 @@
             let idMap = 'map' + Math.random();
             
             container.attr('id', idMap);
-            //this.addElement(container, {name:'map', selector:"#map"}, {tag:"div", id:idMap, class:"js-ymap"});
             
             container.css({width:state.width,height:state.height});
-            //console.log( state, options)
+
             this.map = new ymaps.Map(idMap, state, options); 
             
-            this.mapReady = true;
+            this.jsMapReady = true;
             
             this.map.events.add('boundschange', this.controlBounds.bind(this));
             
-            this._trigger( 'afterInitJsMap', null, this );
+            this._trigger( 'afterinitjsmap', null, this );
             
         },
         /*
@@ -280,22 +279,7 @@
             this.map.controls.add(button, {float: 'right'});
         },
         buttonHandler:function(){},
-        /*
-         * Вспомогательный метод для добавления элемента в this.elements
-         */
-        addElement:function(container, opt,  attr, html){
-            if(this.elements[opt.name] !== undefined){
-                return;
-            }
-            html = html || '';            
-            var element = $(document.createElement(attr.tag));
-            delete attr.tag;
-            element.attr(attr).html(html);
-            container.append(element);
-            this.option( 'selectors.'+opt.name, opt.selector );
-            this.elements[opt.name] = element;
-            this.option( 'elements', this.elements );
-        },
+        
         /*
          * Принимаем массив обьектов и вставляем на карту
          */

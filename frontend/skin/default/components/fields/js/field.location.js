@@ -2,13 +2,13 @@
 (function($) {
     "use strict";
 
-    $.widget( "livestreet.ymapsFieldLocation", $.livestreet.ymapsGeo, {
+    $.widget( "livestreet.ymapsFieldLocation", $.livestreet.ymapsJsMap, {
         /**
          * Дефолтные опции
          */
         options: {
             selectors:{
-                container:"#map",
+                container:".inline_map",
                 staticMap:".static_map",
                 selects:"select",
                 input:"input",
@@ -24,29 +24,20 @@
         
         _create: function () { 
             this._super();
-                        
-            /*this.createFormContainer();
             
-            if( (typeof this.option('data') === "object") && (this.option('data') !== null) ){
-                this.addToForm(this.option('data'));
-            }*/
+            this.option('afterinitymaps', function(){
+                let state = this.option('map.state');
             
-        },
-        /*
-         * Установка обработчиков и показ статичной карты
-         */
-        initYmaps:function(){
-            var state = this.option('map.state');
+                this.colorbox = this.elements.staticMap.colorbox({
+                    inline:true, 
+                    width:state.width+46,
+                    height:state.height+82,
+                    onComplete:this.createOnCompleteMap.bind(this),
+                    onCleanup:this.destroyMap.bind(this)
+                });
+            }.bind(this));
             
-            this.colorbox = this.elements.staticMap.colorbox({
-                inline:true, 
-                width:state.width+46,
-                height:state.height+82,
-                onComplete:this.createOnCompleteMap.bind(this),
-                onCleanup:this.destroyMap.bind(this)
-            });
             
-               
         },
         
         createOnCompleteMap:function(){ 
@@ -106,22 +97,7 @@
          * Обрабочик изменения селекта Собираем данные и отправляем в поиск обьектов
          */
         geocoderToMap:function(geos){
-            
-            /*this.hideStaticMap();
-            
-            var geos = [];
-            this.elements.selects.each(function(i,select){
-                var option = $(select).find('option:selected');
-                if(option.val()){
-                    geos.push( option.text().trim() );
-                }
-            });
-            
-            geos.push( this.elements.input.val().trim() );
-            
-            var geos = geos.join(' ');*/
-            this.geocoder(geos,this.setMapGeocoderObjects.bind(this));
-            
+            this.geocoder(geos,this.setMapGeocoderObjects.bind(this));            
         },
         /*
          * Устанавливаем карту в соответствии с результатом поиска обьектов
@@ -144,11 +120,7 @@
                     zoom:CenterZoom.zoom
                 })
                 this.elements.staticMap.click()
-                /*this.createOnCompleteMap();
-                
-                this.map.options.set('restrictMapArea',false);
-                this.map.setBounds(oGeo.properties.get('boundedBy'));
-                this.map.options.set('restrictMapArea',true);*/
+               
             }     
             
         },
@@ -156,9 +128,7 @@
             if(this.geocoderGeo === null){
                 return false;
             }
-            /*this.map.options.set('restrictMapArea',false);
-            this.map.setBounds(oGeo.properties.get('boundedBy'));
-            this.map.options.set('restrictMapArea',true);*/
+            
         },
         
         /*

@@ -1,92 +1,98 @@
 
 jQuery(document).ready(function($){
     
+    let mapOptions = ls.registry.get('ymapsOptions');
+    
     /*
      * Инит карты в настройках
      */
-    if (typeof(ymaps) == "undefined"){
-        $('.js-ymaps-field-location').ymapsFieldLocation( ls.registry.get('ymaps_options') ); 
-    
-        /*
-         * Привязка карты к полю гео
-         */
+    $('.js-ymaps-field-location').ymapsFieldLocation( mapOptions ); 
 
-        $('.ymaps-ajax-geo').lsFieldAjaxGeo('option', 'afterchange', function(e,data){
-            $('.js-ymaps-field-location').ymapsFieldLocation( 'geocoderToMap', data.context.elements.input.val() )
-        });
+    /*
+     * Привязка карты к полю гео
+     */
+
+    $('.ymaps-ajax-geo').lsFieldAjaxGeo('option', 'afterchange', function(e,data){
+        $('.js-ymaps-field-location').ymapsFieldLocation( 'geocoderToMap', data.context.elements.input.val() )
+    });
 
 
-        $('.ymaps-ajax-geo').lsFieldAjaxGeo('option', 'afterclear', function(e,data){ 
-            $('.js-ymaps-field-location').ymapsFieldLocation( 'clearForm' );
-        });
-    }
+    $('.ymaps-ajax-geo').lsFieldAjaxGeo('option', 'afterclear', function(e,data){ 
+        $('.js-ymaps-field-location').ymapsFieldLocation( 'clearForm' );
+    });
     
     /*
      * Инициация карты в поиске
      */
     ls.hook.add('ls_template_init_end', function(){
         /*
+         * Добавляем контейнер карты 
+         */
+        $('.js-search-ajax-users, .js-search-ajax-ads').append('<div class="js-search-map-container"></div>')
+            
+        /*
+         * Добавляем  карту
+         */
+        $('.js-search-map-container').ymapsJsMap( mapOptions ).hide();
+        /*
          * Инициация кнопки карты
          */
         $('.js-search-toggle-view').lsToggleButtons({
             aftertoggletomap:function(data, el){
-                var lsSearchUsers = $('.js-search-ajax-users');
+                var lsSearch = $('.js-search-ajax-users, .js-search-ajax-ads');
                 
-                lsSearchUsers.lsSearchAjax('option','beforeupdate', function(n, data){
-                    data.setParam('map', 1);
-                });
-                
-                var list = lsSearchUsers.lsSearchAjax('getElement','list');
+                /*
+                 * Меняем url поиска
+                 */                
+                lsSearch.lsSearchAjax("option", "urls.searchtmp", lsSearch.lsSearchAjax("option", "urls.search"));
+                lsSearch.lsSearchAjax("option", "urls.search",  mapOptions.search_url);
+                /*
+                 * Скрываем элементы поиска
+                 */
+                var list = lsSearch.lsSearchAjax('getElement','list');
                 $(list).hide();
                 
-                var more = lsSearchUsers.lsSearchAjax('getElement','more');
+                var more = lsSearch.lsSearchAjax('getElement','more');
                 $(more).hide();
-                /*
-                 * Если нет контейнера карты создаем
-                 */
-                var mapContainer = $('.js-search-map-container');
-                if(!mapContainer.length){
-                    mapContainer = $('<div class="js-search-map-container"></div>');
-                    lsSearchUsers.append(mapContainer);
-                }
+                
                 /*
                  * Показываем карту вместо списка
                  */
-                mapContainer.searchMap(Object.assign(ls.registry.get('ymapsOptions'), {
-                        ymaps:(typeof(ymaps) == "undefined")?null:ymaps
-                    })
-                );
+                let mapContainer = $('.js-search-map-container')
                 mapContainer.show();
                 /*
                  * Сохраняем времемнный колбэк поиска
                  */
-                lsSearchUsers.lsSearchAjax("option", "tmpafterupdate", lsSearchUsers.lsSearchAjax("option", "afterupdate"));
+                lsSearch.lsSearchAjax("option", "tmpafterupdate", lsSearch.lsSearchAjax("option", "afterupdate"));
                 
-                lsSearchUsers.lsSearchAjax("option", "afterupdate", function(){
-                    if(data.response.users.length){
-                        mapContainer.searchMap('clearMap');
-                        mapContainer.searchMap('showUsersOnMap', data.response.users);
+                lsSearch.lsSearchAjax("option", "afterupdate", function(e,data){
+                    $(list).hide();
+                    let users = data.response.objects || [];
+                    if(mapContainer.ymapsJsMap('isMapReady')){
+                        mapContainer.ymapsJsMap('clearMap');
+                        mapContainer.ymapsJsMap('showObjectsOnMap', data.response.objects);
                     }
                 });
-                lsSearchUsers.lsSearchAjax("option", "update");
+                lsSearch.lsSearchAjax( "update");
                 
             },
             aftertogglefrommap:function(data, el){
-                var lsSearchUsers = $('.js-search-ajax-users');
+                var lsSearch = $('.js-search-ajax-users, .js-search-ajax-ads');
+                /*
+                 * Возвращаем url поиска
+                 */
+                lsSearch.lsSearchAjax("option", "urls.search", lsSearch.lsSearchAjax("option", "urls.searchtmp"));
                 
-                lsSearchUsers.lsSearchAjax('option','beforeupdate', null);
-                
+                /*
+                 * Скрываем карту
+                 */
                 $('.js-search-map-container').hide();
-                
-                var list = lsSearchUsers.lsSearchAjax('getElement','list');
-                $(list).show();
-                 var more = lsSearchUsers.lsSearchAjax('getElement','more');
-                $(more).show();
                 
                 /*
                  * Восстанаиливаем колбэк поиска
                  */
-                lsSearchUsers.lsSearchAjax("option", "afterupdate", lsSearchUsers.lsSearchAjax("option", "tmpafterupdate"));
+                lsSearch.lsSearchAjax("option", "afterupdate", lsSearch.lsSearchAjax("option", "tmpafterupdate"));
+                lsSearch.lsSearchAjax( "update");
                 
             }
         });

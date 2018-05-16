@@ -4,7 +4,7 @@
     "dependencies": {
     },
     "scripts": {
-        "ymaps_ymaps":"js/ymaps.js"
+        "ymaps.jsmap":"js/ymaps-jsmap.js"
     },
     "styles": {
     }

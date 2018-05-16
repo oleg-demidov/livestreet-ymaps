@@ -6,9 +6,8 @@ class PluginYmaps_HookLocation extends Hook
     public function RegisterHook()
     {
         $aLoadLocationActions = Config::Get('plugin.ymaps.location.actions');
-        $aActions = array_keys($aLoadLocationActions);
         
-        if(in_array(Router::GetAction(), $aActions)){
+        if(in_array(Router::GetAction(), $aLoadLocationActions)){
             $this->AddHook('template_field_geo_end', 'ComponentLocationAdd');
         }
         

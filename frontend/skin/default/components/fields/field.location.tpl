@@ -24,9 +24,9 @@
 
     {$classes = "{$classes} js-ymaps-field-location"} 
     
-    {$fieldName = Config::Get('plugin.ymaps.location.field_name')}
+    {$fieldName = Config::Get('plugin.ymaps.map.actions.{Router::GetAction()}.field_name')}
     
-    {$optStatMap = Config::Get("plugin.ymaps.location.actions.{Router::GetAction()}.staticMap")}
+    {$optStatMap = Config::Get("plugin.ymaps.map.actions.{Router::GetAction()}.staticMap")}
     
     {$mapQuery = []}
     {$mapQuery.l = 'map'}

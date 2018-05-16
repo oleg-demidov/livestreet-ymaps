@@ -101,7 +101,10 @@ class PluginYmaps_ModuleGeo extends ModuleORM{
         }
     }
     
-    public function GetUsersWithGeo($aUsersCollection) {
+    public function GetUsersWithLocation($aUsersCollection) {
+        if(!sizeof($aUsersCollection)){
+            return [];
+        }
         $aUserIds = [];
         foreach($aUsersCollection as $oUser){
             $aUserIds[] = $oUser->getId();
@@ -121,12 +124,53 @@ class PluginYmaps_ModuleGeo extends ModuleORM{
             if(!$oUser){
                 continue;
             }
-            $aUserData = ($oUser)?$oUser->_getData(['id', 'user_profile_name', 'user_login']):[];
+            
+            $aUserData = [];
+            if($oUser){
+                $aUserData = $oUser->_getData(['id']);
+                $aUserData['title'] = $oUser->getProfileName()?$oUser->getProfileName():$oUser->getLogin();
+            }
             $aUsers[] = array_merge( $aUserData, $oGeo->_getData(),
-                    ['path' => $oUser->getUserWebPath(),'avatar' => $oUser->getProfileAvatarPath()]);
+                    ['path' => $oUser->getUserWebPath(),'imagePath' => $oUser->getProfileAvatarPath()]);
         }
         
         return $aUsers;
+    }
+    
+    public function GetTopicsWithLocation($aTopicsCollection) {
+        if(!sizeof($aTopicsCollection)){
+            return [];
+        }
+        $aTopicIds = [];
+        foreach($aTopicsCollection as $oTopic){
+            $aTopicIds[] = $oTopic->getId();
+        }
+        
+        $aGeo = $this->PluginYmaps_Geo_GetGeoItemsByFilter([
+            '#select' => ['t.lat', 't.long','t.target_id'],
+            '#index-from' => 'target_id',
+            'target_id in' => $aTopicIds,
+            'target_type' => 'topic'
+        ]);
+        
+       
+        $aTopics = [];
+        foreach($aGeo as $oGeo){
+            $oTopic = isset($aTopicsCollection[$oGeo->getTargetId()])?$aTopicsCollection[$oGeo->getTargetId()]:null;  
+            if(!$oTopic){
+                continue;
+            }
+            
+            $aTopicData = [];
+            if($oTopic){
+                $aTopicData = $oTopic->_getData(['topic_id']);
+                $aTopicData['title'] = $oTopic->getTitle();
+            }
+            $aTopics[] = array_merge( $aTopicData, $oGeo->_getData(),
+                    ['path' => $oTopic->getUrl(),'imagePath' => '']);
+        }
+        
+        return $aTopics;
     }
     
 }

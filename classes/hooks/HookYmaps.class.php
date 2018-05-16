@@ -6,7 +6,7 @@ class PluginYmaps_HookYmaps extends Hook
     public function RegisterHook()
     {
         $aLocationActions = Config::Get('plugin.ymaps.location.actions');
-        $aSearchActions = Config::Get('plugin.ymaps.search.actions');
+        $aSearchActions = Config::Get('plugin.ymaps.map.actions');
         $aActions = array_merge(array_keys($aLocationActions),array_keys($aSearchActions));
         
         if(!in_array(Router::GetAction(), $aActions)){

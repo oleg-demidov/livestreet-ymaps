@@ -40,10 +40,8 @@ class PluginYmaps extends Plugin
             ]);
         }
         
-        $this->Component_Add('ymaps:search-map');
         $this->Component_Add('ymaps:fields');
-        $this->Viewer_AssignJs('ymaps_options', Config::Get('plugin.ymaps.location.actions.'.Router::GetAction()));
-        $this->Viewer_AssignJs('ymapsOptions', Config::Get('plugin.ymaps.search.actions.'.Router::GetAction()));
+        $this->Viewer_AssignJs('ymapsOptions', Config::Get('plugin.ymaps.map.actions.'.Router::GetAction()));
 
         $this->Viewer_AppendScript($sPath = Plugin::GetTemplateWebPath('ymaps').'assets/js/init.js');
     }

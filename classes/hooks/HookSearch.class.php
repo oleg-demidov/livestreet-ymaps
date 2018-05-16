@@ -5,7 +5,7 @@ class PluginYmaps_HookSearch extends Hook
 
     public function RegisterHook()
     {
-        $this->AddHook('template_toggle_search_users_view', 'AddToMenuMap');
+        $this->AddHook('template_toggle_search_users_view', 'AddToMenuMap');        
         
     }
     
@@ -21,5 +21,4 @@ class PluginYmaps_HookSearch extends Hook
         return $param['items'];
     }
     
-
 }
