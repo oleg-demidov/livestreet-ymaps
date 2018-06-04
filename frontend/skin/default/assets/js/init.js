@@ -68,10 +68,13 @@ jQuery(document).ready(function($){
                 lsSearch.lsSearchAjax("option", "afterupdate", function(e,data){
                     $(list).hide();
                     let users = data.response.objects || [];
-                    if(mapContainer.ymapsJsMap('isMapReady')){
-                        mapContainer.ymapsJsMap('clearMap');
-                        mapContainer.ymapsJsMap('showObjectsOnMap', data.response.objects);
-                    }
+                    setTimeout(function(){
+                        if(mapContainer.ymapsJsMap('isMapReady')){
+                            mapContainer.ymapsJsMap('clearMap');
+                            mapContainer.ymapsJsMap('showObjectsOnMap', data.response.objects);
+                        }
+                    },500);
+                    
                 });
                 lsSearch.lsSearchAjax( "update");
                 

@@ -27,7 +27,9 @@ class PluginYmaps_HookProfile extends Hook
     }
     
     public function AddMapProfile($aParams) {
-        //print_r($aParams);
+        if(!is_array($aParams['items'])){
+            return false;
+        }
         foreach($aParams['items'] as &$aItem){
             if($aItem['label'] == 'Местоположение'){
                 $aItem['content'] = $this->getHTML($aItem['content'], $aParams['user']);

@@ -69,6 +69,8 @@
     
     {$classes = "$classes ymaps-ajax-geo"}
     
+    {$rules['errors-container'] = ".ls-field-geo-errors-container"}
+    
 {/block}
 
 {block 'field_input'}
@@ -76,7 +78,7 @@
     <div class="{$component}-icon">{component 'icon' icon="map-marker"}</div>
     <div class="input-close-but">X</div>
     <input type="text" class="{$component}-input {$classes} {$component}-geo js-field-geo" 
-           placeholder="{lang 'plugin.ymaps.field.defaultText'}"
+           placeholder="{lang 'plugin.ymaps.field.defaultText'}" {field_input_attr_common useValue=false}
            value="{$sInputVal}" data-show-dropdown="{$showDropdown}" autocomplete="off" >
     
     {*if $choosenGeo}
@@ -89,6 +91,7 @@
     <input type="hidden" class="js-field-geo-region" value="{$idRegion}" name="{$name|default:'geo'}[region]">
     <input type="hidden" class="js-field-geo-city" value="{$idCity}" name="{$name|default:'geo'}[city]"> 
     
+    <div class="{$component}-geo-errors-container"></div>
     
     {$aItems = [["text" => {lang 'plugin.ymaps.loading'}, "classes" => 'ls-loading']]} 
     

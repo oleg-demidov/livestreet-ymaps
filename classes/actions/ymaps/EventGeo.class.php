@@ -41,7 +41,7 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
         if($sCountryCode = getRequest('country_code')){
             $oCountry = $this->Geo_GetCountries(['code' =>$sCountryCode], [], 1, 1);
             if($oCountry['count']){
-                $oCountry = $oCountry['collection'][0];
+                $oCountry = array_shift($oCountry['collection']);
                 $aFilter['country_id'] = $oCountry->getId();
             }
         }elseif($oCountry = $this->Geo_GetGeoObject('country', getRequest('id'))){
@@ -132,7 +132,7 @@ class PluginYmaps_ActionYmaps_EventGeo extends Event {
         
         $oViewer = $this->Viewer_GetLocalViewer();
         $oViewer->Assign('items', $aReturn, true);
-        $oViewer->Assign('isSubnav', 1,true);
+        $oViewer->Assign('isSubnav', 1, true);
         return $oViewer->Fetch("component@dropdown.menu");
     }
     

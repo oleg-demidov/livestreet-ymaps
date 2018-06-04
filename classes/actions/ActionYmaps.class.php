@@ -16,7 +16,7 @@ class PluginYmaps_ActionYmaps extends ActionPlugin
     protected function RegisterEvent()
     {
         $this->AddEventPreg('/^ajax-search-users$/i','EventAjaxSearchUsers');
-        $this->AddEventPreg('/^ajax-search-ads/i','EventAjaxSearchAds');
+        //$this->AddEventPreg('/^ajax-search-ads/i','EventAjaxSearchAds');
         
         $this->RegisterEventExternal('Geo','PluginYmaps_ActionYmaps_EventGeo');
         $this->AddEventPreg('/^ajax-geo$/i','Geo::EventAjaxGeo');
@@ -126,86 +126,4 @@ class PluginYmaps_ActionYmaps extends ActionPlugin
         $this->Viewer_AssignAjax('textEmpty', $this->Lang_Get('search.alerts.empty'));
     }
     
-    public function EventAjaxSearchAds()
-    {
-         /**
-         * Устанавливаем формат Ajax ответа
-         */
-        $this->Viewer_SetResponseAjax('json');
-        $this->SetTemplate(false);
-        /**
-         * Формируем фильтр
-         */
-        $aFilter = [
-            '#select' => ['topic_id'],
-            '#with'   => ['property'],
-            '#page'   => [1, 10000]
-        ];
-        
-        function _getCategoriesByUrlFull($sUrl) {
-            if(!$sUrl){
-                return false;
-            }
-            $aUrls = explode('/', trim($sUrl));
-            $aUrlsField = [];
-            foreach($aUrls as $sUrl){
-                $aUrlsField[] = "'".$sUrl."'";
-            }
-            $aCategories = $this->Category_GetCategoryItemsByFilter([
-                '#index-from' => 'id',
-                'url in' => $aUrls,
-                '#select' => ['id', 'title', 'url_full', 'url'],
-                '#order' => ['field:url' => $aUrlsField]
-            ]);  
-            return $aCategories;        
-        }
-
-        if(getRequest('category_url_full')){
-            $aCategories = _getCategoriesByUrlFull(getRequest('category_url_full'));
-            if(sizeof($aCategories)){
-                $aFilter['categories'] = $aCategories;
-            }
-        }elseif(getRequest('categories') ){
-            $aCategories = $this->Category_GetCategoryItemsByFilter([
-                '#index-from' => 'id',
-                'id in' => getRequest('categories'),
-                '#select' => [ 'url_full', 'id', 'title']
-            ]);
-            $aFilter['categories'] = $aCategories;
-        }        
-        
-        if($oGeo = $this->_getGeoByRequest()){
-            $aFilter['geo_object'] = $oGeo;
-        }
-        
-        
-        if($sOrderField == 'prop:price'){
-            $aFilter['#prop:price !='] = -1;
-        }
-        
-        if(($iPriceFrom = getRequest('price_from')) !== ''){
-            $aFilter['#prop:price >'] = $iPriceFrom;
-        }
-        if(($iPriceTo = getRequest('price_to')) !== ''){
-            $aFilter['#prop:price <'] = $iPriceTo;
-        }
-        
-        $aBreadcrumbsHTML = null;
-        if( isset($aFilter['categories']) ){
-            $aBreadcrumbsHTML = $this->getBreadcrumbsHTML( $aFilter['categories'] );
-        }
-        
-        $aAds = $this->Topic_GetAdsByFilter($aFilter);
-        /**
-         * Для подгрузки
-         */
-        //TODO: Сделать подгрузку долями
-        $this->Viewer_AssignAjax('objects', $aAds['collection']);
-        $this->Viewer_AssignAjax('count_loaded', $aAds['count']);
-        $this->Viewer_AssignAjax('next_page', 2);
-        $this->Viewer_AssignAjax('hide', 1);
-        $this->Viewer_AssignAjax('searchCount', (int)$aResult['count']);
-        $this->Viewer_AssignAjax('count_left', 1111);
-        $this->Viewer_AssignAjax('textEmpty', $this->Lang_Get('search.alerts.empty'));
-    }
 }

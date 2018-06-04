@@ -153,6 +153,20 @@ $config['map'] = [
                    'content' => ''
                ],
            ]  
+       ],
+        'blog' => [
+           'staticMap' => [
+               'll'=>'37.620070,55.753630',
+               'width' => 400,
+               'height' => 300,
+               'zoom' => 3,
+               'pt' => [ //https://tech.yandex.ru/maps/doc/staticapi/1.x/dg/concepts/markers-docpage/
+                   'style' =>'round',
+                   'color' => '',
+                   'size' => '',
+                   'content' => ''
+               ],
+           ]  
        ]
 
     ]

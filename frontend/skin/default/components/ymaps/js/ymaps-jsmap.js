@@ -307,7 +307,7 @@
             this.addObjectsClusterer(aObjects);
             
             this.map.setBounds(this.clusterer.getBounds());
-            
+            this.map.setBounds(this.clusterer.getBounds());
             
         }
     });
