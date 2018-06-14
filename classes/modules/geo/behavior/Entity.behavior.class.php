@@ -80,12 +80,12 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
             $oGeo->setTargetId($this->getPrimaryKeyValue());
             $oGeo->setTargetType($this->getParam('target_type'));
         }
+        
         $oGeo->_setData($mValue);
+        $oGeo->_setValidateScenario('');
             
-        if(!$this->getParam('validate_guest')){
-            $oGeo->_setValidateScenario('target_id');
-        }
-            
+         
+        
         if(!$oGeo->_Validate()){
             return $this->Lang_Get('plugin.ymaps.notices.validate_require').'. '.$oGeo->_getValidateError();
         }     
@@ -103,7 +103,7 @@ class PluginYmaps_ModuleGeo_BehaviorEntity extends Behavior
         if(!$oGeo = $this->oObject->_getDataOne('_location_for_save')){
             return false;
         }
-//        $oGeo->setTargetId($this->getPrimaryKeyValue());
+        $oGeo->setTargetId($this->getPrimaryKeyValue());
         $oGeo->Save();
     }
     

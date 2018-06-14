@@ -190,7 +190,11 @@
                 this.elements.menu.empty().append( liItems );
             }.bind(this), {showProgress:false});
         },
-        loadList:function(type, params, call){
+        loadList:function(type, params, call){ 
+            if(!(!!type)){
+                return false;
+            }
+            
             this._load( type, Object.assign({ target_type: this.type }, params), function( response ) {
                 call(response);                
             }.bind( this), {showProgress:false});
