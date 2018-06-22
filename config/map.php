@@ -3,7 +3,7 @@
 $config['map'] = [
     'actions' => [
         'people' => [
-            'search_url' => Router::GetPath('ymaps/ajax-search-users'),
+            'search_url' => Config::Get('path.root.web').'ymaps/ajax-search-users',
             'default' => false, // Показывать карту по умолчанию
             'map' => [
                 'state' => [
@@ -33,7 +33,7 @@ $config['map'] = [
         ],
         
         'masters' => [
-            'search_url' => Router::GetPath('masters/ajax-search-ads-map'),
+            'search_url' => Config::Get('path.root.web').'masters/ajax-search-ads-map',
             'default' => false, // Показывать карту по умолчанию
             'map' => [
                 'state' => [
